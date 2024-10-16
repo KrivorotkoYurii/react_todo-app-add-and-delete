@@ -16,3 +16,9 @@ export const deleteTodo = (todoId: number) => {
 
   return client.delete(url);
 };
+
+export const updateTodo = (todoId: number, updates: Partial<Todo>) => {
+  const url = `/todos/${todoId}`;
+
+  return client.patch<Todo>(url, updates);
+};

@@ -1,10 +1,11 @@
-import React from 'react';
-import { Errors } from '../../types/ErrorsEnum';
+import React, { Dispatch, SetStateAction } from 'react';
 import cn from 'classnames';
+
+import { Errors } from '../../types/ErrorsEnum';
 
 interface Props {
   errorNotification: Errors;
-  setErrorNotification: React.Dispatch<React.SetStateAction<Errors>>;
+  setErrorNotification: Dispatch<SetStateAction<Errors>>;
 }
 
 export const ErrorNotifications: React.FC<Props> = ({

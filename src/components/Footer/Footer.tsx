@@ -1,46 +1,36 @@
 import React, { Dispatch, SetStateAction } from 'react';
 import cn from 'classnames';
 
-import { Filter } from '../../types/FilterEnum';
 import { Todo } from '../../types/Todo';
-import { Errors } from '../../types/ErrorsEnum';
+import { Filter } from '../../types/FilterEnum';
 import { getLinkHref } from '../../utils/getLinkHref';
-import { handleDelete } from '../../handlers/handleDelete';
 
 interface Props {
-  onFilterChange: React.Dispatch<React.SetStateAction<Filter>>;
-  filter: Filter;
   todos: Todo[];
-  setIsBeingDeleted: Dispatch<SetStateAction<number>>;
-  setTodos: Dispatch<SetStateAction<Todo[]>>;
-  setFocusOnChange: Dispatch<SetStateAction<boolean>>;
-  setErrorNotification: Dispatch<SetStateAction<Errors>>;
+  filter: Filter;
+  onDelete: (todoId: number) => void;
+  onFilterChange: Dispatch<SetStateAction<Filter>>;
 }
 
 export const Footer: React.FC<Props> = ({
-  onFilterChange,
-  filter,
   todos,
-  setIsBeingDeleted,
-  setTodos,
-  setFocusOnChange,
-  setErrorNotification,
+  filter,
+  onDelete,
+  onFilterChange,
 }) => {
-  const activeTodosCount = todos.filter(todo => !todo.completed).length;
-
   const linksValues = Object.values(Filter);
+
+  const activeTodosCount = todos.filter(todo => !todo.completed).length;
 
   const handleDeleteCompletedTodos = () => {
     const completedTodos: Todo[] = todos.filter(todo => todo.completed);
 
-    completedTodos.forEach(completedTodo => {
-      handleDelete(
-        completedTodo.id,
-        setIsBeingDeleted,
-        setTodos,
-        setErrorNotification,
-        setFocusOnChange,
-      );
+    const completedTodosIds = completedTodos.map(
+      completedTodo => completedTodo.id,
+    );
+
+    completedTodosIds.forEach(completedTodoId => {
+      onDelete(completedTodoId);
     });
   };
 

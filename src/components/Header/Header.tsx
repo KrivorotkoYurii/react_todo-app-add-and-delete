@@ -1,47 +1,22 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, Dispatch, SetStateAction } from 'react';
 import cn from 'classnames';
-import { Errors } from '../../types/ErrorsEnum';
-import { Todo } from '../../types/Todo';
-import { handleSubmit } from '../../handlers/handleSubmit';
 
 interface Props {
+  handleSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
   inputChange: string;
-  onInputChange: React.Dispatch<React.SetStateAction<string>>;
-  setErrorNotification: React.Dispatch<React.SetStateAction<Errors>>;
-  setTodos: React.Dispatch<React.SetStateAction<Todo[]>>;
-  isBeingSaved: boolean;
-  setIsBeingSaved: React.Dispatch<React.SetStateAction<boolean>>;
-  setTempTodo: React.Dispatch<React.SetStateAction<Todo | null>>;
+  loadingTodoIds: number[];
   focusOnChange: boolean;
-  setFocusOnChange: React.Dispatch<React.SetStateAction<boolean>>;
+  onInputChange: Dispatch<SetStateAction<string>>;
 }
 
 export const Header: React.FC<Props> = ({
+  handleSubmit,
   inputChange,
-  onInputChange,
-  setErrorNotification,
-  setTodos,
-  isBeingSaved,
-  setIsBeingSaved,
-  setTempTodo,
+  loadingTodoIds,
   focusOnChange,
-  setFocusOnChange,
+  onInputChange,
 }) => {
   const todoInputField = useRef<HTMLInputElement>(null);
-
-  const handleSubmitForm = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-
-    handleSubmit(
-      inputChange,
-      setErrorNotification,
-      setTempTodo,
-      setIsBeingSaved,
-      setTodos,
-      onInputChange,
-      setFocusOnChange,
-    );
-  };
 
   useEffect(() => {
     if (todoInputField.current) {
@@ -58,9 +33,9 @@ export const Header: React.FC<Props> = ({
         disabled
       />
 
-      <form onSubmit={handleSubmitForm}>
+      <form onSubmit={handleSubmit}>
         <input
-          disabled={isBeingSaved}
+          disabled={loadingTodoIds.includes(0)}
           ref={todoInputField}
           value={inputChange}
           onChange={event => onInputChange(event.target.value.trimStart())}
